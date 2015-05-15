@@ -20,9 +20,11 @@
 extern "C" {
 #endif
 
+#ifndef UA_FFI_BINDINGS
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#endif
 #include "ua_config.h"
 
 /**
@@ -537,7 +539,7 @@ typedef struct {
     
 struct UA_DataType {
     UA_NodeId typeId; ///< The nodeid of the type
-    ptrdiff_t memSize UA_BITFIELD(16); ///< Size of the struct in memory
+    UA_UInt16 memSize; ///< Size of the struct in memory
     UA_UInt16 typeIndex UA_BITFIELD(13); ///< Index of the type in the datatypetable
     UA_Boolean namespaceZero UA_BITFIELD(1); ///< The type is defined in namespace zero
     UA_Boolean fixedSize UA_BITFIELD(1); ///< The type (and its members) contains no pointers
