@@ -629,7 +629,7 @@ UA_AddNodesResponse *UA_Client_createObjectNode(UA_Client *client, UA_QualifiedN
 UA_AddNodesResponse *UA_Client_createVariableNode(UA_Client *client, UA_QualifiedName browseName, UA_LocalizedText displayName, 
                                                     UA_LocalizedText description, UA_ExpandedNodeId parentNodeId, UA_NodeId referenceTypeId,
                                                     UA_UInt32 userWriteMask, UA_UInt32 writeMask, UA_ExpandedNodeId typeDefinition, 
-                                                    UA_NodeId dataType, UA_Variant *value ) {
+                                                    UA_NodeId dataType, UA_Variant *value) {
     UA_AddNodesRequest adReq;
     UA_AddNodesRequest_init(&adReq);
     
@@ -645,7 +645,7 @@ UA_AddNodesResponse *UA_Client_createVariableNode(UA_Client *client, UA_Qualifie
     // Default node properties and attributes
     ADDNODES_COPYDEFAULTATTRIBUTES(adReq, vAtt);
     
-    // Specific to objects
+    // Specific to variables
     adReq.nodesToAdd[0].nodeClass = UA_NODECLASS_VARIABLE;
     vAtt.accessLevel              = 0;
     vAtt.specifiedAttributes |= UA_NODEATTRIBUTESMASK_ACCESSLEVEL;
@@ -668,6 +668,69 @@ UA_AddNodesResponse *UA_Client_createVariableNode(UA_Client *client, UA_Qualifie
     UA_NodeId_copy(&dataType, &(vAtt.dataType));
     
     ADDNODES_PACK_AND_SEND(adReq,vAtt,VARIABLE);
+    
+    return adRes;
+}
+
+UA_AddNodesResponse *UA_Client_createReferenceTypeNode(UA_Client *client, UA_QualifiedName browseName, UA_LocalizedText displayName, 
+                                                  UA_LocalizedText description, UA_ExpandedNodeId parentNodeId, UA_NodeId referenceTypeId,
+                                                  UA_UInt32 userWriteMask, UA_UInt32 writeMask, UA_ExpandedNodeId typeDefinition,
+                                                  UA_LocalizedText inverseName ) {
+    UA_AddNodesRequest adReq;
+    UA_AddNodesRequest_init(&adReq);
+    
+    UA_AddNodesResponse *adRes;
+    adRes = UA_AddNodesResponse_new();
+    UA_AddNodesResponse_init(adRes);
+    
+    UA_ReferenceTypeAttributes vAtt;
+    UA_ReferenceTypeAttributes_init(&vAtt);
+    adReq.nodesToAdd = (UA_AddNodesItem *) UA_AddNodesItem_new();
+    UA_AddNodesItem_init(adReq.nodesToAdd);
+    
+    // Default node properties and attributes
+    ADDNODES_COPYDEFAULTATTRIBUTES(adReq, vAtt);
+
+    // Specific to referencetypes
+    adReq.nodesToAdd[0].nodeClass = UA_NODECLASS_REFERENCETYPE;
+    UA_LocalizedText_copy(&inverseName, &(vAtt.inverseName));
+    vAtt.specifiedAttributes |= UA_NODEATTRIBUTESMASK_INVERSENAME;
+    vAtt.symmetric = UA_FALSE;
+    vAtt.specifiedAttributes |= UA_NODEATTRIBUTESMASK_SYMMETRIC;
+    vAtt.isAbstract = UA_FALSE;
+    vAtt.specifiedAttributes |= UA_NODEATTRIBUTESMASK_ISABSTRACT;
+    
+    
+    ADDNODES_PACK_AND_SEND(adReq,vAtt,REFERENCETYPE);
+    
+    return adRes;
+}
+
+UA_AddNodesResponse *UA_Client_createObjectTypeNode(UA_Client *client, UA_QualifiedName browseName, UA_LocalizedText displayName, 
+                                                    UA_LocalizedText description, UA_ExpandedNodeId parentNodeId, UA_NodeId referenceTypeId,
+                                                    UA_UInt32 userWriteMask, UA_UInt32 writeMask, UA_ExpandedNodeId typeDefinition) {
+    UA_AddNodesRequest adReq;
+    UA_AddNodesRequest_init(&adReq);
+    
+    UA_AddNodesResponse *adRes;
+    adRes = UA_AddNodesResponse_new();
+    UA_AddNodesResponse_init(adRes);
+    
+    UA_ObjectTypeAttributes vAtt;
+    UA_ObjectTypeAttributes_init(&vAtt);
+    adReq.nodesToAdd = (UA_AddNodesItem *) UA_AddNodesItem_new();
+    UA_AddNodesItem_init(adReq.nodesToAdd);
+    
+    // Default node properties and attributes
+    ADDNODES_COPYDEFAULTATTRIBUTES(adReq, vAtt);
+    
+    // Specific to referencetypes
+    adReq.nodesToAdd[0].nodeClass = UA_NODECLASS_OBJECTTYPE;
+    vAtt.isAbstract = UA_FALSE;
+    vAtt.specifiedAttributes |= UA_NODEATTRIBUTESMASK_ISABSTRACT;
+    
+    
+    ADDNODES_PACK_AND_SEND(adReq,vAtt,OBJECTTYPE);
     
     return adRes;
 }

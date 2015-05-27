@@ -208,7 +208,11 @@ static void addNodeFromAttributes(UA_Server *server, UA_Session *session, UA_Add
 
     if(result->statusCode != UA_STATUSCODE_GOOD)
         return;
-
+    
+    // The BrowseName was not included with the NodeAttribute ExtensionObject
+    UA_QualifiedName_init(&(node->browseName));
+    UA_QualifiedName_copy(&(item->browseName), &(node->browseName));
+    
     // add the node
     *result = UA_Server_addNodeWithSession(server, session, node, item->parentNodeId,
                                            item->referenceTypeId);
