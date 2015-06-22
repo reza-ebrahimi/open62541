@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
     
     // New Object
     adResp = UA_Client_createObjectNode(client,    
-        UA_EXPANDEDNODEID_NUMERIC(1, 0), // Assign new/random NodeID  
+        UA_EXPANDEDNODEID_NUMERIC(0, 0), // Assign new/random NodeID  
         UA_QUALIFIEDNAME(0, "TheNewGreatNodeBrowseName"),
         UA_LOCALIZEDTEXT("en_US", "TheNewGreatNode"),
         UA_LOCALIZEDTEXT("de_DE", "Hier koennte Ihre Webung stehen!"),
@@ -154,7 +154,7 @@ int main(int argc, char *argv[]) {
     theValue->data = theValueDate;
     
     adResp = UA_Client_createVariableNode(client,
-        UA_EXPANDEDNODEID_NUMERIC(1, 0), // Assign new/random NodeID  
+        UA_EXPANDEDNODEID_NUMERIC(0, 0), // Assign new/random NodeID  
         UA_QUALIFIEDNAME(0, "VariableNode"),
         UA_LOCALIZEDTEXT("en_US", "TheNewVariableNode"),
         UA_LOCALIZEDTEXT("en_US", "This integer is just amazing - it has digits and everything."),
