@@ -154,7 +154,12 @@ UA_StatusCode UA_NodeStore_insert(UA_NodeStore *ns, UA_Node *node, const UA_Node
         entry->refcount++;
 
     struct cds_lfht_node *result;
-    if(!UA_NodeId_isNull(&node->nodeId)) {
+    //FIXME: a bit dirty workaround of preserving namespace
+    //namespace index is assumed to be valid
+    UA_NodeId tempNodeid;
+    UA_NodeId_copy(&node->nodeId, &tempNodeid);
+    tempNodeid.namespaceIndex = 0;
+    if(UA_NodeId_isNull(&tempNodeid)) {
         hash_t h = hash(&node->nodeId);
         rcu_read_lock();
         result = cds_lfht_add_unique(ns->ht, h, compare, &entry->node.nodeId, &entry->htn);
