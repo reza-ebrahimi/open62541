@@ -89,18 +89,18 @@ int main(int argc, char *argv[]) {
     wReq.nodesToWrite[0].value.value.type = &UA_TYPES[UA_TYPES_INT32];
     wReq.nodesToWrite[0].value.value.storageType = UA_VARIANT_DATA_NODELETE; //do not free the integer on deletion
     wReq.nodesToWrite[0].value.value.data = &value;
-
+    
     UA_WriteResponse wResp = UA_Client_write(client, &wReq);
     if(wResp.responseHeader.serviceResult == UA_STATUSCODE_GOOD)
             printf("the new value is: %i\n", value);
     UA_WriteRequest_deleteMembers(&wReq);
     UA_WriteResponse_deleteMembers(&wResp);
 
+#ifdef ENABLE_ADDNODES 
     /* Create a new object type node */
-    
     // New ReferenceType
-    UA_AddNodesResponse *adResp = UA_Client_createReferenceTypeNode
-    (client,
+    UA_AddNodesResponse *adResp = UA_Client_createReferenceTypeNode(client,
+        UA_EXPANDEDNODEID_NUMERIC(1, 12133), // Assign this NodeId (will fail if client is called multiple times)
         UA_QUALIFIEDNAME(0, "TheNewReference"),
         UA_LOCALIZEDTEXT("en_US", "TheNewReferenceNode"),
         UA_LOCALIZEDTEXT("en_US", "References something that might or might not exist."),
@@ -108,41 +108,38 @@ int main(int argc, char *argv[]) {
         UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
         (UA_UInt32) 0, (UA_UInt32) 0, 
         UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
-        UA_LOCALIZEDTEXT("en_US", "IsNewlyReferencedBy")
-    );
-    if (adResp->responseHeader.serviceResult == UA_STATUSCODE_GOOD && adResp->resultsSize > 0) {
+        UA_LOCALIZEDTEXT("en_US", "IsNewlyReferencedBy"));
+    if (adResp->resultsSize > 0 && adResp->results[0].statusCode == UA_STATUSCODE_GOOD ) {
         printf("Created 'TheNewReference' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     UA_AddNodesResponse_deleteMembers(adResp);
     free(adResp);
     
     // New ObjectType
-    adResp = UA_Client_createObjectTypeNode
-    (client,    
-     UA_QUALIFIEDNAME(0, "TheNewObjectType"),
-     UA_LOCALIZEDTEXT("en_US", "TheNewObjectType"),
-     UA_LOCALIZEDTEXT("en_US", "Put innovative description here."),
-     UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
-     UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
-     (UA_UInt32) 0, (UA_UInt32) 0, 
-     UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER)
-    );
-    if (adResp->responseHeader.serviceResult == UA_STATUSCODE_GOOD && adResp->resultsSize > 0) {
+    adResp = UA_Client_createObjectTypeNode(client,    
+        UA_EXPANDEDNODEID_NUMERIC(1, 12134), // Assign this NodeId (will fail if client is called multiple times)
+        UA_QUALIFIEDNAME(0, "TheNewObjectType"),
+        UA_LOCALIZEDTEXT("en_US", "TheNewObjectType"),
+        UA_LOCALIZEDTEXT("en_US", "Put innovative description here."),
+        UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
+        UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
+        (UA_UInt32) 0, (UA_UInt32) 0, 
+        UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER));
+        if (adResp->resultsSize > 0 && adResp->results[0].statusCode == UA_STATUSCODE_GOOD ) {
         printf("Created 'TheNewGreatNode' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     
     // New Object
-    adResp = UA_Client_createObjectNode
-    (client,    
+    adResp = UA_Client_createObjectNode(client,    
+        UA_EXPANDEDNODEID_NUMERIC(1, 0), // Assign new/random NodeID  
         UA_QUALIFIEDNAME(0, "TheNewGreatNodeBrowseName"),
         UA_LOCALIZEDTEXT("en_US", "TheNewGreatNode"),
         UA_LOCALIZEDTEXT("de_DE", "Hier koennte Ihre Webung stehen!"),
         UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
         UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
         (UA_UInt32) 0, (UA_UInt32) 0, 
-        UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER)
-    );
-    if (adResp->responseHeader.serviceResult == UA_STATUSCODE_GOOD && adResp->resultsSize > 0) {
+        UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER));
+    if (adResp->resultsSize > 0 && adResp->results[0].statusCode == UA_STATUSCODE_GOOD ) {
         printf("Created 'TheNewGreatNode' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     
@@ -156,8 +153,8 @@ int main(int argc, char *argv[]) {
     theValue->type = &UA_TYPES[UA_TYPES_INT32];
     theValue->data = theValueDate;
     
-    adResp = UA_Client_createVariableNode
-    (client,
+    adResp = UA_Client_createVariableNode(client,
+        UA_EXPANDEDNODEID_NUMERIC(1, 0), // Assign new/random NodeID  
         UA_QUALIFIEDNAME(0, "VariableNode"),
         UA_LOCALIZEDTEXT("en_US", "TheNewVariableNode"),
         UA_LOCALIZEDTEXT("en_US", "This integer is just amazing - it has digits and everything."),
@@ -166,15 +163,15 @@ int main(int argc, char *argv[]) {
         (UA_UInt32) 0, (UA_UInt32) 0, 
         UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
         UA_NODEID_NUMERIC(0, UA_NS0ID_INT32),
-        theValue
-    );
-    if (adResp->responseHeader.serviceResult == UA_STATUSCODE_GOOD && adResp->resultsSize > 0) {
+        theValue);
+    if (adResp->resultsSize > 0 && adResp->results[0].statusCode == UA_STATUSCODE_GOOD ) {
         printf("Created 'TheVariableNode' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     UA_AddNodesResponse_deleteMembers(adResp);
     free(adResp);
     free(theValue);
     /* Done creating a new node*/
+#endif
 
     UA_Client_disconnect(client);
     UA_Client_delete(client);

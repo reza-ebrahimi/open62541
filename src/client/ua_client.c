@@ -581,8 +581,8 @@ UA_DeleteReferencesResponse UA_Client_deleteReferences(UA_Client *client, UA_Del
     UA_ExpandedNodeId_copy(&parentNodeId, &(REQUEST.nodesToAdd[0].parentNodeId));         \
     UA_NodeId_copy(&referenceTypeId, &(REQUEST.nodesToAdd[0].referenceTypeId));           \
     UA_ExpandedNodeId_copy(&typeDefinition, &(REQUEST.nodesToAdd[0].typeDefinition));     \
+    UA_ExpandedNodeId_copy(&reqId, &(REQUEST.nodesToAdd[0].requestedNewNodeId ));         \
     REQUEST.nodesToAddSize = 1;                                                           \
-    REQUEST.nodesToAdd[0].requestedNewNodeId = UA_EXPANDEDNODEID_NUMERIC(1, 0);           \
     } while(0)
     
 #define ADDNODES_PACK_AND_SEND(PREQUEST,PATTRIBUTES,PNODETYPE) do {                                                                     \
@@ -597,7 +597,7 @@ UA_DeleteReferencesResponse UA_Client_deleteReferences(UA_Client *client, UA_Del
 } while(0)
     
 /* NodeManagement */
-UA_AddNodesResponse *UA_Client_createObjectNode(UA_Client *client, UA_QualifiedName browseName, UA_LocalizedText displayName, 
+UA_AddNodesResponse *UA_Client_createObjectNode(UA_Client *client, UA_ExpandedNodeId reqId, UA_QualifiedName browseName, UA_LocalizedText displayName, 
                                                 UA_LocalizedText description, UA_ExpandedNodeId parentNodeId, UA_NodeId referenceTypeId,
                                                 UA_UInt32 userWriteMask, UA_UInt32 writeMask, UA_ExpandedNodeId typeDefinition ) {
     UA_AddNodesRequest adReq;
@@ -614,7 +614,7 @@ UA_AddNodesResponse *UA_Client_createObjectNode(UA_Client *client, UA_QualifiedN
 
     // Default node properties and attributes
     ADDNODES_COPYDEFAULTATTRIBUTES(adReq, vAtt);
-
+    
     // Specific to objects
     adReq.nodesToAdd[0].nodeClass = UA_NODECLASS_OBJECT;
     vAtt.eventNotifier       = 0;
@@ -625,7 +625,7 @@ UA_AddNodesResponse *UA_Client_createObjectNode(UA_Client *client, UA_QualifiedN
     return adRes;
 }
 
-UA_AddNodesResponse *UA_Client_createVariableNode(UA_Client *client, UA_QualifiedName browseName, UA_LocalizedText displayName, 
+UA_AddNodesResponse *UA_Client_createVariableNode(UA_Client *client, UA_ExpandedNodeId reqId, UA_QualifiedName browseName, UA_LocalizedText displayName, 
                                                     UA_LocalizedText description, UA_ExpandedNodeId parentNodeId, UA_NodeId referenceTypeId,
                                                     UA_UInt32 userWriteMask, UA_UInt32 writeMask, UA_ExpandedNodeId typeDefinition, 
                                                     UA_NodeId dataType, UA_Variant *value) {
@@ -671,7 +671,7 @@ UA_AddNodesResponse *UA_Client_createVariableNode(UA_Client *client, UA_Qualifie
     return adRes;
 }
 
-UA_AddNodesResponse *UA_Client_createReferenceTypeNode(UA_Client *client, UA_QualifiedName browseName, UA_LocalizedText displayName, 
+UA_AddNodesResponse *UA_Client_createReferenceTypeNode(UA_Client *client, UA_ExpandedNodeId reqId, UA_QualifiedName browseName, UA_LocalizedText displayName, 
                                                   UA_LocalizedText description, UA_ExpandedNodeId parentNodeId, UA_NodeId referenceTypeId,
                                                   UA_UInt32 userWriteMask, UA_UInt32 writeMask, UA_ExpandedNodeId typeDefinition,
                                                   UA_LocalizedText inverseName ) {
@@ -705,7 +705,7 @@ UA_AddNodesResponse *UA_Client_createReferenceTypeNode(UA_Client *client, UA_Qua
     return adRes;
 }
 
-UA_AddNodesResponse *UA_Client_createObjectTypeNode(UA_Client *client, UA_QualifiedName browseName, UA_LocalizedText displayName, 
+UA_AddNodesResponse *UA_Client_createObjectTypeNode(UA_Client *client, UA_ExpandedNodeId reqId, UA_QualifiedName browseName, UA_LocalizedText displayName, 
                                                     UA_LocalizedText description, UA_ExpandedNodeId parentNodeId, UA_NodeId referenceTypeId,
                                                     UA_UInt32 userWriteMask, UA_UInt32 writeMask, UA_ExpandedNodeId typeDefinition) {
     UA_AddNodesRequest adReq;

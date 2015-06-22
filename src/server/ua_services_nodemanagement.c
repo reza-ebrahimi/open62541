@@ -213,6 +213,9 @@ static void addNodeFromAttributes(UA_Server *server, UA_Session *session, UA_Add
     UA_QualifiedName_init(&(node->browseName));
     UA_QualifiedName_copy(&(item->browseName), &(node->browseName));
     
+    if(item->requestedNewNodeId.nodeId.identifier.numeric != 0)
+        UA_NodeId_copy(&item->requestedNewNodeId.nodeId, &node->nodeId);
+    
     // add the node
     *result = UA_Server_addNodeWithSession(server, session, node, item->parentNodeId,
                                            item->referenceTypeId);
