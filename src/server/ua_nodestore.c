@@ -258,6 +258,8 @@ UA_StatusCode UA_NodeStore_insert(UA_NodeStore *ns, UA_Node *node, const UA_Node
         if(node->nodeClass==UA_NODECLASS_VARIABLE){ //set namespaceIndex in browseName in case id is generated
         	((UA_VariableNode*)node)->browseName.namespaceIndex=node->nodeId.namespaceIndex;
         }
+        if(node->nodeId.namespaceIndex==0)
+            node->nodeId.namespaceIndex=1;
         UA_Int32 identifier = ns->count+1; // start value
         UA_Int32 size = ns->size;
         hash_t increase = mod2(identifier, size);
