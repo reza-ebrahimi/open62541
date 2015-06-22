@@ -101,8 +101,8 @@ int main(int argc, char *argv[]) {
     // New ReferenceType
     UA_AddNodesResponse *adResp = UA_Client_createReferenceTypeNode(client,
         UA_EXPANDEDNODEID_NUMERIC(1, 12133), // Assign this NodeId (will fail if client is called multiple times)
-        UA_QUALIFIEDNAME(0, "TheNewReference"),
-        UA_LOCALIZEDTEXT("en_US", "TheNewReferenceNode"),
+        UA_QUALIFIEDNAME(0, "NewReference"),
+        UA_LOCALIZEDTEXT("en_US", "TheNewReference"),
         UA_LOCALIZEDTEXT("en_US", "References something that might or might not exist."),
         UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
         UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
         UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
         UA_LOCALIZEDTEXT("en_US", "IsNewlyReferencedBy"));
     if (adResp->resultsSize > 0 && adResp->results[0].statusCode == UA_STATUSCODE_GOOD ) {
-        printf("Created 'TheNewReference' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
+        printf("Created 'NewReference' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     UA_AddNodesResponse_deleteMembers(adResp);
     free(adResp);
@@ -118,7 +118,7 @@ int main(int argc, char *argv[]) {
     // New ObjectType
     adResp = UA_Client_createObjectTypeNode(client,    
         UA_EXPANDEDNODEID_NUMERIC(1, 12134), // Assign this NodeId (will fail if client is called multiple times)
-        UA_QUALIFIEDNAME(0, "TheNewObjectType"),
+        UA_QUALIFIEDNAME(0, "NewObjectType"),
         UA_LOCALIZEDTEXT("en_US", "TheNewObjectType"),
         UA_LOCALIZEDTEXT("en_US", "Put innovative description here."),
         UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
         (UA_UInt32) 0, (UA_UInt32) 0, 
         UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER));
         if (adResp->resultsSize > 0 && adResp->results[0].statusCode == UA_STATUSCODE_GOOD ) {
-        printf("Created 'TheNewGreatNode' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
+        printf("Created 'NewObjectType' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     
     // New Object
@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) {
         (UA_UInt32) 0, (UA_UInt32) 0, 
         UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER));
     if (adResp->resultsSize > 0 && adResp->results[0].statusCode == UA_STATUSCODE_GOOD ) {
-        printf("Created 'TheNewGreatNode' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
+        printf("Created 'NewObject' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     
     UA_AddNodesResponse_deleteMembers(adResp);
@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
         UA_NODEID_NUMERIC(0, UA_NS0ID_INT32),
         theValue);
     if (adResp->resultsSize > 0 && adResp->results[0].statusCode == UA_STATUSCODE_GOOD ) {
-        printf("Created 'TheVariableNode' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
+        printf("Created 'NewVariable' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     UA_AddNodesResponse_deleteMembers(adResp);
     free(adResp);
