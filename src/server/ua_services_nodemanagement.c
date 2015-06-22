@@ -249,7 +249,7 @@ void Service_AddNodes(UA_Server *server, UA_Session *session, const UA_AddNodesR
         response->responseHeader.serviceResult = UA_STATUSCODE_BADOUTOFMEMORY;
         return;
     }
-
+    
 #ifdef UA_EXTERNAL_NAMESPACES
 #ifdef NO_ALLOCA
     UA_Boolean isExternal[size];

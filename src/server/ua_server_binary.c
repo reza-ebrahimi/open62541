@@ -329,7 +329,7 @@ static void processMSG(UA_Connection *connection, UA_Server *server, const UA_By
         INVOKE_SERVICE(TranslateBrowsePathsToNodeIds, UA_TYPES_TRANSLATEBROWSEPATHSTONODEIDSRESPONSE);
         break;
     case UA_NS0ID_ADDNODESREQUEST:
-        INVOKE_SERVICE(AddNodes);
+        INVOKE_SERVICE(AddNodes, UA_TYPES_ADDNODESRESPONSE);
         break;
     default: {
         if(requestType.namespaceIndex == 0 && requestType.identifier.numeric==787)

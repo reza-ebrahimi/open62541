@@ -7,6 +7,8 @@
     #include "ua_types_encoding_binary.h"
 #else
     #include "open62541.h"
+    #include <string.h>
+    #include <stdlib.h>
 #endif
 
 #include <stdio.h>
@@ -94,9 +96,7 @@ int main(int argc, char *argv[]) {
     UA_WriteRequest_deleteMembers(&wReq);
     UA_WriteResponse_deleteMembers(&wResp);
 
-#ifdef ENABLE_NODEMANAGEMENT
-    /* Create a new object type node
-     */
+    /* Create a new object type node */
     
     // New ReferenceType
     UA_AddNodesResponse *adResp = UA_Client_createReferenceTypeNode
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
         printf("Created 'TheNewReference' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     UA_AddNodesResponse_deleteMembers(adResp);
-    UA_free(adResp);
+    free(adResp);
     
     // New ObjectType
     adResp = UA_Client_createObjectTypeNode
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
     }
     
     UA_AddNodesResponse_deleteMembers(adResp);
-    UA_free(adResp);
+    free(adResp);
     
     // New Integer Variable
     UA_Variant *theValue = UA_Variant_new();
@@ -159,7 +159,7 @@ int main(int argc, char *argv[]) {
     adResp = UA_Client_createVariableNode
     (client,
         UA_QUALIFIEDNAME(0, "VariableNode"),
-        UA_LOCALIZEDTEXT("en_US", "TheVariableNode"),
+        UA_LOCALIZEDTEXT("en_US", "TheNewVariableNode"),
         UA_LOCALIZEDTEXT("en_US", "This integer is just amazing - it has digits and everything."),
         UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
         UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
@@ -172,10 +172,9 @@ int main(int argc, char *argv[]) {
         printf("Created 'TheVariableNode' with numeric NodeID %u\n", adResp->results[0].addedNodeId.identifier.numeric );
     }
     UA_AddNodesResponse_deleteMembers(adResp);
-    UA_free(adResp);
-    UA_free(theValue);
+    free(adResp);
+    free(theValue);
     /* Done creating a new node*/
-#endif
 
     UA_Client_disconnect(client);
     UA_Client_delete(client);
