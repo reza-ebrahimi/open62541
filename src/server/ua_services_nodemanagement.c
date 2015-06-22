@@ -5,20 +5,21 @@
 #include "ua_session.h"
 #include "ua_util.h"
 
-#define COPY_STANDARDATTRIBUTES do {                                    \
-    if(attr.specifiedAttributes & UA_NODEATTRIBUTESMASK_DISPLAYNAME) {  \
-        vnode->displayName = attr.displayName;                          \
-        UA_LocalizedText_init(&attr.displayName);                       \
-    }                                                                   \
-    if(attr.specifiedAttributes & UA_NODEATTRIBUTESMASK_DESCRIPTION) {  \
-        vnode->description = attr.description;                          \
-        UA_LocalizedText_init(&attr.description);                       \
-    }                                                                   \
-    if(attr.specifiedAttributes & UA_NODEATTRIBUTESMASK_WRITEMASK)      \
-        vnode->writeMask = attr.writeMask;                              \
-    if(attr.specifiedAttributes & UA_NODEATTRIBUTESMASK_USERWRITEMASK)  \
-        vnode->userWriteMask = attr.userWriteMask;                      \
-    } while(0)
+#define COPY_STANDARDATTRIBUTES do {                                       \
+    if(attr.specifiedAttributes & UA_NODEATTRIBUTESMASK_DISPLAYNAME) {     \
+        vnode->displayName = attr.displayName;                             \
+        UA_LocalizedText_copy(&attr.displayName, &(vnode->displayName));   \
+        UA_LocalizedText_init(&attr.displayName);                          \
+    }                                                                      \
+    if(attr.specifiedAttributes & UA_NODEATTRIBUTESMASK_DESCRIPTION) {     \
+        UA_LocalizedText_copy(&attr.description, &(vnode->description));   \
+        UA_LocalizedText_init(&attr.description);                          \
+    }                                                                      \
+    if(attr.specifiedAttributes & UA_NODEATTRIBUTESMASK_WRITEMASK)         \
+        vnode->writeMask = attr.writeMask;                                 \
+    if(attr.specifiedAttributes & UA_NODEATTRIBUTESMASK_USERWRITEMASK)     \
+        vnode->userWriteMask = attr.userWriteMask;                         \
+} while(0)
 
 static UA_StatusCode parseVariableNode(UA_ExtensionObject *attributes, UA_Node **new_node) {
     if(attributes->typeId.identifier.numeric !=

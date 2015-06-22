@@ -62,10 +62,10 @@ UA_TYPE_BINARY_ENCODING(UA_DataValue)
 UA_TYPE_BINARY_ENCODING(UA_Variant)
 UA_TYPE_BINARY_ENCODING(UA_DiagnosticInfo)
 
-size_t UA_calcSizeBinary(const void *p, const UA_DataType *dataType);
-UA_StatusCode UA_encodeBinary(const void *src, const UA_DataType *dataType, UA_ByteString *dst,
-                              size_t *UA_RESTRICT offset);
-UA_StatusCode UA_decodeBinary(const UA_ByteString *src, size_t * UA_RESTRICT offset, void *dst,
+size_t UA_EXPORT UA_calcSizeBinary(const void *p, const UA_DataType *dataType);
+UA_StatusCode UA_EXPORT UA_encodeBinary(const void *src, const UA_DataType *dataType, UA_ByteString *dst,
+                              size_t *restrict offset);
+UA_StatusCode UA_decodeBinary(const UA_ByteString *src, size_t *restrict offset, void *dst,
                               const UA_DataType *dataType);
 /// @} /* end of group */
 
