@@ -181,7 +181,7 @@ static UA_StatusCode parseViewNode(UA_ExtensionObject *attributes, UA_Node **new
 static void addNodeFromAttributes(UA_Server *server, UA_Session *session, UA_AddNodesItem *item,
                                   UA_AddNodesResult *result) {
     // adding nodes to ns0 is not allowed over the wire
-    if(UA_NodeId_isNull(&item->requestedNewNodeId.nodeId) == UA_FALSE && item->requestedNewNodeId.nodeId.namespaceIndex == 0) {
+    if(item->requestedNewNodeId.nodeId.namespaceIndex == 0) {
         result->statusCode = UA_STATUSCODE_BADNODEIDREJECTED;
         return;
     }
