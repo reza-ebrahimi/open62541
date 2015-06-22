@@ -245,13 +245,16 @@ UA_StatusCode UA_NodeStore_insert(UA_NodeStore *ns, UA_Node *node, const UA_Node
         if(expand(ns) != UA_STATUSCODE_GOOD)
             return UA_STATUSCODE_BADINTERNALERROR;
     }
-    
     // get a free slot
     struct nodeEntry **slot;
-    if(UA_NodeId_isNull(&node->nodeId)) {
+    //FIXME: a bit dirty workaround of preserving namespace
+    //namespace index is assumed to be valid
+    UA_NodeId tempNodeid;
+    UA_NodeId_copy(&node->nodeId, &tempNodeid);
+    tempNodeid.namespaceIndex = 0;
+    if(UA_NodeId_isNull(&tempNodeid)) {
         // find a unique nodeid that is not taken
         node->nodeId.identifierType = UA_NODEIDTYPE_NUMERIC;
-        node->nodeId.namespaceIndex = 1; // namespace 1 is always in the local nodestore
         if(node->nodeClass==UA_NODECLASS_VARIABLE){ //set namespaceIndex in browseName in case id is generated
         	((UA_VariableNode*)node)->browseName.namespaceIndex=node->nodeId.namespaceIndex;
         }
