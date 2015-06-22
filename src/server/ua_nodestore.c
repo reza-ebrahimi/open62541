@@ -255,11 +255,13 @@ UA_StatusCode UA_NodeStore_insert(UA_NodeStore *ns, UA_Node *node, const UA_Node
     if(UA_NodeId_isNull(&tempNodeid)) {
         // find a unique nodeid that is not taken
         node->nodeId.identifierType = UA_NODEIDTYPE_NUMERIC;
-        //set namespaceIndex in browseName in case id is generated
-        node->browseName.namespaceIndex=node->nodeId.namespaceIndex;
 
         if(node->nodeId.namespaceIndex==0) //original request for ns=0 should yield ns=1
             node->nodeId.namespaceIndex=1;
+
+        //set namespaceIndex in browseName in case id is generated
+        node->browseName.namespaceIndex=node->nodeId.namespaceIndex;
+
         UA_Int32 identifier = ns->count+1; // start value
         UA_Int32 size = ns->size;
         hash_t increase = mod2(identifier, size);
