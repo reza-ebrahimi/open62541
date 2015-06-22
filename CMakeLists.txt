@@ -175,7 +175,7 @@ if(ENABLE_EXTERNAL_NAMESPACES)
 endif()
 
 ## enable dynamic nodeset
-option(ENABLE_ADDNODES "Enable dynamic addition of nodes" OFF)
+option(ENABLE_ADDNODES "Enable dynamic addition of nodes" ON)
 if(ENABLE_ADDNODES)
     add_definitions(-DENABLE_ADDNODES )
 endif()
