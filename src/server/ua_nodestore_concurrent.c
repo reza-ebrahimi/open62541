@@ -173,11 +173,14 @@ UA_StatusCode UA_NodeStore_insert(UA_NodeStore *ns, UA_Node *node, const UA_Node
     } else {
         /* create a unique nodeid */
         ((UA_Node *)&entry->node)->nodeId.identifierType = UA_NODEIDTYPE_NUMERIC;
-        if(((UA_Node *)&entry->node)->nodeId.namespaceIndex == 0)
+        if(((UA_Node *)&entry->node)->nodeId.namespaceIndex == 0) //original request for ns=0 should yield ns=1
             ((UA_Node *)&entry->node)->nodeId.namespaceIndex = 1;
         if(((UA_Node *)&entry->node)->nodeClass==UA_NODECLASS_VARIABLE){ //set namespaceIndex in browseName in case id is generated
         	((UA_VariableNode*)&entry->node)->browseName.namespaceIndex=((UA_Node *)&entry->node)->nodeId.namespaceIndex;
         }
+        //set namespaceIndex in browseName in case id is generated
+        ((UA_Node *)&entry->node)->browseName.namespaceIndex=node->nodeId.namespaceIndex;
+
         unsigned long identifier;
         long before, after;
         rcu_read_lock();
