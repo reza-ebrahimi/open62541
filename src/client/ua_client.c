@@ -188,7 +188,10 @@ static UA_StatusCode SecureChannelHandshake(UA_Client *client, UA_Boolean renew)
         opnSecRq.requestType = UA_SECURITYTOKENREQUESTTYPE_RENEW;
     } else {
         opnSecRq.requestType = UA_SECURITYTOKENREQUESTTYPE_ISSUE;
-        UA_SecureChannel_generateNonce(&client->channel.clientNonce);
+        //SecurityPolicy#None sets a zero nonce
+        client->channel.clientNonce.length = 1;
+        client->channel.clientNonce.data = UA_malloc(1);
+        client->channel.clientNonce.data[0] = '\0';
         UA_ByteString_copy(&client->channel.clientNonce, &opnSecRq.clientNonce);
         opnSecRq.securityMode = UA_MESSAGESECURITYMODE_NONE;
     }
